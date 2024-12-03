@@ -122,20 +122,10 @@ def run_app():
     FloatingHearts(canvas, "heart.png", heart_count=15)
 
     def display_compliment():
-        canvas_width = canvas.winfo_width()
-        canvas_height = canvas.winfo_height()
-
         canvas.delete("compliment")
         compliment_text = random.choice(compliments)
-        canvas.create_text(
-            canvas_width // 2,
-            canvas_height // 2,
-            text=compliment_text,
-            font=("Helvetica", 30, "bold"),
-            fill="#4B0082",
-            width=600,
-            tags="compliment"
-        )
+
+        styles.create_compliment_label(canvas, compliment_text)
 
     def initialize_compliment():
         canvas_width = canvas.winfo_width()
