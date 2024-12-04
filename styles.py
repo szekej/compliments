@@ -1,5 +1,5 @@
 import tkinter as tk
-import tkinter.font as th_font
+import tkinter.font as tk_font
 from custom_slider import CustomSlider
 
 BACKGROUND_COLOR = '#ffccf2'  # soft pink background
@@ -36,7 +36,7 @@ def wrap_text(text, font, max_width):
 
     Args:
         text (str): The string of text to be wrapped.
-        font (th_font.Font): The font object used to measure text width.
+        font (tk_font.Font): The font object used to measure text width.
         max_width (int): The maximum width that a line of text can occupy.
 
     Returns:
@@ -78,7 +78,7 @@ def create_compliment_label(canvas, text, font=LARGE_FONT, max_width=500):
     canvas_width = canvas.winfo_width()
     canvas_height = canvas.winfo_height()
 
-    font_obj = th_font.Font(family=font[0], size=font[1], weight=font[2])
+    font_obj = tk_font.Font(family=font[0], size=font[1], weight=font[2])
     wrapped_text = wrap_text(text, font_obj, max_width)
     final_text = "\n".join(wrapped_text)
 

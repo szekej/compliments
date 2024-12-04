@@ -1,3 +1,4 @@
+import logging
 import os
 import platform
 import random
@@ -100,6 +101,36 @@ def manage_startup(slider_value):
 
     save_startup_preference(slider_value)
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+logging.basicConfig(level=logging.DEBUG)
+
+
+def create_hover_effect(canvas, text, font, color, hover_color, x, y, font_size_increase=6):
+    """Creates hover-able text that enlarges and becomes bold on hover."""
+
+    initial_font_size = int(font.split()[1]) - font_size_increase
+    original_font = (font.split()[0], initial_font_size)
+
+    text_id = canvas.create_text(x, y, text=text, font=original_font, fill=color, tags="compliment")
+    logging.debug(f"Created text with initial font: {original_font}, at position: ({x}, {y})")
+
+    def on_hover(event):
+        logging.debug(f"Mouse entered on text '{text}', applying hover effect")
+
+        # change the font size and bold text on hover
+        enlarged_bold_font = (
+        original_font[0], initial_font_size + font_size_increase, "bold")
+        canvas.itemconfig(text_id, font=enlarged_bold_font, fill=hover_color)
+        logging.debug(f"Font size increased and color changed to {hover_color}, text made bold")
+
+    def on_leave(event):
+        # reset font size and color
+        canvas.itemconfig(text_id, font=original_font, fill=color)
+
+    canvas.tag_bind(text_id, "<Enter>", lambda event: on_hover(event))
+    canvas.tag_bind(text_id, "<Leave>", lambda event: on_leave(event))
+
 
 def run_app():
     compliments = load_compliments()
@@ -122,10 +153,22 @@ def run_app():
     FloatingHearts(canvas, "heart.png", heart_count=15)
 
     def display_compliment():
+        """Display a random compliment with hover effect (font enlargement and color change)."""
+        canvas_width = canvas.winfo_width()
+        canvas_height = canvas.winfo_height()
         canvas.delete("compliment")
         compliment_text = random.choice(compliments)
 
-        styles.create_compliment_label(canvas, compliment_text)
+        create_hover_effect(
+            canvas,
+            text=compliment_text,
+            font="Helvetica 30 bold",
+            color="#4B0082",
+            hover_color="#630063",
+            x=canvas_width // 2,
+            y=canvas_height // 2,
+            font_size_increase=6
+        )
 
     def initialize_compliment():
         canvas_width = canvas.winfo_width()
