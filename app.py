@@ -1,4 +1,3 @@
-import logging
 import os
 import platform
 import random
@@ -92,18 +91,14 @@ def remove_from_startup_windows():
 def manage_startup(slider_value):
     os_name = get_os()
 
-    if slider_value == 1:  # YES (run at startup)
+    if slider_value == 1:  # YES - run at startup
         if os_name == 'Windows':
             add_to_startup_windows()
-    else:  # NO (do not run at startup)
+    else:  # NO - do not run at startup
         if os_name == 'Windows':
             remove_from_startup_windows()
 
     save_startup_preference(slider_value)
-
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 def create_hover_effect(canvas, text, font, color, hover_color, x, y, font_size_increase=6):
@@ -113,23 +108,19 @@ def create_hover_effect(canvas, text, font, color, hover_color, x, y, font_size_
     original_font = (font.split()[0], initial_font_size)
 
     text_id = canvas.create_text(x, y, text=text, font=original_font, fill=color, tags="compliment")
-    logging.debug(f"Created text with initial font: {original_font}, at position: ({x}, {y})")
 
-    def on_hover(event):
-        logging.debug(f"Mouse entered on text '{text}', applying hover effect")
-
+    def on_hover():
         # change the font size and bold text on hover
         enlarged_bold_font = (
-        original_font[0], initial_font_size + font_size_increase, "bold")
+            original_font[0], initial_font_size + font_size_increase, "bold")
         canvas.itemconfig(text_id, font=enlarged_bold_font, fill=hover_color)
-        logging.debug(f"Font size increased and color changed to {hover_color}, text made bold")
 
-    def on_leave(event):
+    def on_leave():
         # reset font size and color
         canvas.itemconfig(text_id, font=original_font, fill=color)
 
-    canvas.tag_bind(text_id, "<Enter>", lambda event: on_hover(event))
-    canvas.tag_bind(text_id, "<Leave>", lambda event: on_leave(event))
+    canvas.tag_bind(text_id, "<Enter>", lambda event: on_hover())
+    canvas.tag_bind(text_id, "<Leave>", lambda event: on_leave())
 
 
 def run_app():
@@ -146,11 +137,15 @@ def run_app():
     root.state('zoomed')
     root.configure(bg="#edaade")
 
-    canvas = tk.Canvas(root, bg="#edaade", highlightthickness=0)
+    # frame to organize widgets
+    main_frame = tk.Frame(root, bg="#edaade")
+    main_frame.pack(fill=tk.BOTH, expand=True)
+
+    canvas = tk.Canvas(main_frame, bg="#edaade", highlightthickness=0)
     canvas.pack(fill=tk.BOTH, expand=True)
 
-    FallingStars(canvas, "star.png")
-    FloatingHearts(canvas, "heart.png", heart_count=15)
+    FallingStars(canvas, "pictures/star.png")
+    FloatingHearts(canvas, "pictures/heart.png", heart_count=15)
 
     def display_compliment():
         """Display a random compliment with hover effect (font enlargement and color change)."""
@@ -180,9 +175,9 @@ def run_app():
             root.after(100, initialize_compliment)
 
     initialize_compliment()
+    styles.create_startup_label(main_frame)
 
-    styles.create_startup_label(root)
-    custom_slider = styles.CustomSlider(root, manage_startup)
+    custom_slider = styles.CustomSlider(main_frame, manage_startup)
     startup_pref = load_startup_preference()
     custom_slider.set(startup_pref)
     custom_slider.slider_frame.pack(pady=5)

@@ -35,7 +35,7 @@ class CustomSlider:
 
         self.slider_dot = self.canvas.create_oval(0, 0, 4, 4, fill="#4B0082", outline="")
 
-        self.value = 1  # start with YES (1)
+        self.value = 1  # starts with YES
 
         self.canvas.bind("<Button-1>", self.on_click)
 
