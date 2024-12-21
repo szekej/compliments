@@ -1,6 +1,8 @@
 import os
 import random
+
 from PIL import Image, ImageTk
+
 
 class FallingStars:
     """
@@ -26,7 +28,8 @@ class FallingStars:
 
         self.animate_stars()
 
-    def load_star_image(self, image_path):
+    @staticmethod
+    def load_star_image(image_path):
         """
         Loads and resizes the star image from the provided path.
 

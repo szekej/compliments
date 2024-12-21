@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.font as tk_font
+
 from custom_slider import CustomSlider
 
 BACKGROUND_COLOR = '#ffccf2'  # soft pink background

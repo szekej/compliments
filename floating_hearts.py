@@ -1,5 +1,7 @@
 import random
+
 from PIL import Image, ImageTk
+
 
 class FloatingHearts:
     """
